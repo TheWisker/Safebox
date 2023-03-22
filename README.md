@@ -1,6 +1,6 @@
 <h1 align="center">Safebox</h1>
 <div align="center">
-    <img width="200" src="./assets/icon.png">
+    <img width="200" src="./assets/logo.png">
 </div>
 <p align="center">Offline password encrypted page generator</p>
 
