@@ -6,7 +6,7 @@
 
 <h2 align="center">Introdution</h2>
 
-This project provide a offline password encrypted page generator that generates html files with an encrypted document that can be accessed with a password.
+This project provides a offline password encrypted page generator that generates html files with an encrypted html document and/or some encrypted files that can be accessed with a password.
 
 <h2 align="center">Demo</h2>
 
