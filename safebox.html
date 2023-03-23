@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- https://www.freeformatter.com/javascript-escape.html -->
 <html>
     <head>
         <title>${title}</title>
@@ -91,12 +91,29 @@
         </script>
         <script>
             (function(){
-                const encrypted = "${CryptoJS.AES.encrypt(input, password).toString()}";
+                const data = ${JSON.stringify(data)};
                 $ = (id) => {return document.getElementById(id);}
                 function unlock() {
                     const password = $("_password").value;
                     if (password.length == 0) {$("_password").style.borderColor = "red"; return;}
-                    try {document.write(CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8));}
+                    try {
+                        if (data.hasOwnProperty("files") && data.files.length != 0) {
+                            data.files.forEach((file) => {
+                                let link = document.createElement("a");
+                                let decrypted = CryptoJS.AES.decrypt(file.data, password);
+                                let buffer = new Uint8Array(decrypted.words.length * 4);
+                                for (let i = 0; i < decrypted.words.length; i++) {
+                                    buffer[i * 4] = (decrypted.words[i] >> 24) & 0xff;
+                                    buffer[i * 4 + 1] = (decrypted.words[i] >> 16) & 0xff;
+                                    buffer[i * 4 + 2] = (decrypted.words[i] >> 8) & 0xff;
+                                    buffer[i * 4 + 3] = decrypted.words[i] & 0xff;
+                                } link.href = URL.createObjectURL(new Blob([buffer]));
+                                link.download = CryptoJS.AES.decrypt(file.name, password).toString(CryptoJS.enc.Utf8);
+                                link.click(); URL.revokeObjectURL(link.href);
+                            });
+                        }
+                        if (data.hasOwnProperty("html") && data.html.length != 0) {document.write(CryptoJS.AES.decrypt(data.html, password).toString(CryptoJS.enc.Utf8));}
+                    }
                     catch (e) {console.error("Error decrypting:" + e.message); $("_password").style.borderColor = "red";}
                 }
                 $("_password").addEventListener("click", () => {$("_password").style.borderColor = "black";});
